@@ -1,24 +1,24 @@
-const { Router } = require("express");
+const { Router } = require('express');
 const {
-  findOrders,
-  findOrder,
-  createOrder,
-  updateOrder,
-  deleteOrder,
-} = require("../controllers/repair.controller");
+  findAllRepairs,
+  findOneRepair,
+  createRepair,
+  updateRepair,
+  deleteRepair,
+} = require('../controllers/repair.controller');
 
 const router = Router();
 
-router.get("/", findOrders);
+router.get('/', findAllRepairs);
 
-router.get("/:id", findOrder);
+router.get('/:id', findOneRepair);
 
-router.post("/", createOrder);
+router.post('/', createRepair);
 
-router.patch("/:id", updateOrder);
+router.patch('/:id', updateRepair);
 
-router.delete("/:id", deleteOrder);
+router.delete('/:id', deleteRepair);
 
 module.exports = {
-  repairsRouter: router,
+  repairRouter: router,
 };

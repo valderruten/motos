@@ -1,148 +1,143 @@
-const User = require("../models/user.model");
+const User = require('../models/user.model');
 
-const findUsers = async (req, res) => {
+exports.findAllUsers = async (req, res) => {
   try {
     const users = await User.findAll({
+      attributes: ['id', 'name', 'email'],
       where: {
-        status: "available",
+        status: 'available',
       },
     });
 
-    res.status(200).json({
-      status: "Success",
-      message: "Users was found successfully",
+    return res.status(200).json({
+      status: 'success',
+      message: 'Users found',
       users,
     });
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      status: "fail",
-      message: "Internal server error",
+    res.status(500).json({
+      status: 'fail',
+      message: 'Something went very wrong! 🧨',
     });
   }
 };
-const findUser = async (req, res) => {
+
+exports.findOneUser = async (req, res) => {
   try {
     const { id } = req.params;
+
     const user = await User.findOne({
+      attributes: ['id', 'name', 'email'],
       where: {
-        status: "available",
         id,
+        status: 'available',
       },
     });
+
     if (!user) {
       return res.status(404).json({
-        status: "error",
-        message: "User not found",
+        status: 'error',
+        message: 'User not found',
       });
     }
-    res.status(200).json({
-      status: "success",
-      message: "User was found successfully",
+
+    return res.status(200).json({
+      status: 'success',
+      message: 'User Found',
       user,
     });
-  } catch (error) {
-    console.log(error);
+  } catch {
     return res.status(500).json({
-      status: "fail",
-      message: "Internal server error",
+      status: 'fail',
+      message: 'Something went very wrong! 🧨',
     });
   }
 };
+exports.createUser = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
 
-const updateUser = async (req, res) => {
+    const user = await User.create({
+      name,
+      email,
+      password,
+      role,
+    });
+
+    return res.status(201).json({
+      status: 'success',
+      message: 'User created',
+      user,
+    });
+  } catch {
+    return res.status(500).json({
+      status: 'fail',
+      message: 'Something went very wrong! 🧨',
+    });
+  }
+};
+exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-
-    const { username, email } = req.body;
+    const { name, email } = req.body;
 
     const user = await User.findOne({
+      attributes: ['id', 'name', 'email'],
       where: {
-        status: "available",
         id,
+        status: 'available',
       },
     });
 
     if (!user) {
       return res.status(404).json({
-        status: "error",
-        message: "User not found",
+        status: 'error',
+        message: 'User not found',
       });
     }
 
-    await user.update({ username, email });
+    await user.update({ name, email });
 
-    res.status(200).json({
-      status: "success",
-      message: "User updated successfully",
+    return res.status(200).json({
+      status: 'success',
+      message: 'User updated successfully',
     });
-  } catch (error) {
+  } catch {
     return res.status(500).json({
-      status: "fail",
-      message: "Internal server error",
+      status: 'fail',
+      message: 'Something went very wrong! 🧨',
     });
   }
 };
-
-const createUser = async (req, res) => {
-  try {
-  } catch (error) {
-    return res.status(500).json({
-      status: "fail",
-      message: "Internal server error",
-    });
-  }
-
-  const { name, email, password } = req.body;
-
-  const user = await User.create({
-    name: name.toLowerCase(),
-    email: email.toLowerCase(),
-    password,
-  });
-
-  res.status(201).json({
-    status: "success",
-    message: "User created successfully",
-    user,
-  });
-};
-
-const deleteUser = async (req, res) => {
+exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
 
     const user = await User.findOne({
+      attributes: ['id', 'name', 'email'],
       where: {
-        status: "available",
         id,
+        status: 'available',
       },
     });
 
     if (!user) {
       return res.status(404).json({
-        status: "error",
-        message: "User not found",
+        status: 'error',
+        message: 'User not found',
       });
     }
 
-    await user.update({ status: false });
+    await user.update({ status: 'disabled' });
 
     res.status(200).json({
-      status: "success",
-      message: "User deleted successfully",
+      status: 'success',
+      message: 'User deleted successfully',
     });
-  } catch (error) {
+  } catch {
     return res.status(500).json({
-      status: "fail",
-      message: "Internal server error",
+      status: 'fail',
+      message: 'Something went very wrong! 🧨',
     });
   }
-};
-module.exports = {
-  findUsers,
-  findUser,
-  updateUser,
-  createUser,
-  deleteUser,
 };

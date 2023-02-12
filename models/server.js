@@ -1,68 +1,59 @@
-const express = require("express");
-const { repairsRouter } = require("../routes/repairs.routes");
-const cors = require("cors");
-const { usersRouter } = require("../routes/user.routes");
-const { db } = require("../database/db");
-const morgan = require("morgan");
-//1. CREAMOS UNA CLASE
+const express = require('express');
+const cors = require('cors');
+const { db } = require('../database/db');
+const { userRouter } = require('../routes/user.routes');
+const { repairRouter } = require('../routes/repairs.routes');
+const initModel = require('./init.model');
 
 class Server {
   constructor() {
-    //DEFINIMOS LA APLICACIÓN DE EXPRESS Y SE LA ASIGNAMOS A LA PROPIEDAD APP
     this.app = express();
-    //DEFINIMOS EL PUERTO QUE LO TENEMOS EN LOS ENVIROMENTS
-    this.port = process.env.PORT || 3001;
+    this.port = process.env.PORT;
 
-    //DEFINIMOS LOS PATHS DE NUESTRA APLICACIÓN
+    //Path Routes
     this.paths = {
-      user: "/api/v1/user",
-      repairs: "/api/v1/repair",
+      repairs: '/api/v1/repairs',
+      users: '/api/v1/users',
     };
 
-    //LLAMO EL METODO DE CONEXION A LA BASE DE DATOS
+    //Connect to db
     this.database();
 
-    //INVOCAMOS EL METODO MIDDLEWARES
+    //Middlewares
     this.middlewares();
 
-    //INVOCAMOS EL METODO ROUTES
+    //Routes
     this.routes();
   }
 
-  //MIDDLEWARES
   middlewares() {
-    this.app.use (morgan('dev'))
-    //UTILIZAMOS LAS CORS PARA PERMITIR ACCESSO A LA API
     this.app.use(cors());
-    //UTILIZAMOS EXPRESS.JSON PARA PARSEAR EL BODY DE LA REQUEST
     this.app.use(express.json());
   }
 
-  //RUTAS
   routes() {
-    //utilizar las rutas de productos
-    this.app.use(this.paths.repairs, repairsRouter);
-    //utilizar las rutas de usuarios
-    this.app.use(this.paths.user, usersRouter);
+    this.app.use(this.paths.users, userRouter);
+    this.app.use(this.paths.repairs, repairRouter);
   }
 
   database() {
     db.authenticate()
-      .then(() => console.log("Database authenticated"))
-      .catch((error) => console.log(error));
+      .then(() => console.log('Database authenticated 😁'))
+      .catch(err => console.log(err));
+
+    // relations
+    initModel();
 
     db.sync()
-      .then(() => console.log("Database synced"))
-      .catch((error) => console.log(error));
+      .then(() => console.log('Database synced 😁'))
+      .catch(err => console.log(err));
   }
 
-  //METODO PARA ESCUCHAR SOLICITUDES POR EL PUERTO
   listen() {
     this.app.listen(this.port, () => {
-      console.log("Server is running on port", this.port);
+      console.log('Server Running On Port 😁', this.port);
     });
   }
 }
 
-//2. EXPORTAMOS EL SERVIDOR
 module.exports = Server;
