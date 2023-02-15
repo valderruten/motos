@@ -3,7 +3,6 @@ const cors = require('cors');
 const { db } = require('../database/db');
 const { userRouter } = require('../routes/user.routes');
 const { repairRouter } = require('../routes/repairs.routes');
-const initModel = require('./init.model');
 
 class Server {
   constructor() {
@@ -41,8 +40,7 @@ class Server {
       .then(() => console.log('Database authenticated 😁'))
       .catch(err => console.log(err));
 
-    // relations
-    initModel();
+    //relations
 
     db.sync()
       .then(() => console.log('Database synced 😁'))

@@ -62,7 +62,7 @@ exports.createRepair = async (req, res) => {
     });
   } catch {
     return res.status(500).json({
-      status: 'fail',
+      status: 'fail!  ',
       message: 'Somethin went very wront! 🧨',
     });
   }
@@ -86,10 +86,10 @@ exports.updateRepair = async (req, res) => {
       });
     }
 
-    await repair.update({ status });
+    await repair.update({ status:'completed' });
 
     return res.status(200).json({
-      status: 'success',
+      status: 'completed',
     });
   } catch {
     return res.status(500).json({
@@ -112,7 +112,7 @@ exports.deleteRepair = async (req, res) => {
     if (!repair) {
       return res.status(404).json({
         status: 'error',
-        message: 'Repair not found',
+        message: 'Repair is completed',
       });
     }
 
