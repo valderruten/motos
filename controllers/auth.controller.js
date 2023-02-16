@@ -6,9 +6,9 @@ const AppError = require('../utils/appError');
 
 /* A function that creates a user. */
 exports.createUser = catchAsync(async (req, res, next) => {
-  const { username, email, password, role = 'user' } = req.body;
+  const {name, email, password, role = 'user' } = req.body;
 
-  const user = new User({ username, email, password, role });
+  const user = new User({ name, email, password, role });
   
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(password, salt);
@@ -23,7 +23,7 @@ exports.createUser = catchAsync(async (req, res, next) => {
     token,
     user: {
       id: user.id,
-      username: user.name,
+      name: user.name,
       email: user.email,
       role: user.role,
     },
