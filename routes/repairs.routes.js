@@ -1,3 +1,4 @@
+const { validIfExistUser } = require('../middlewares/user.middleware');
 const { Router } = require('express');
 const {
   findAllRepairs,

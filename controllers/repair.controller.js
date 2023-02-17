@@ -1,25 +1,21 @@
 const Repair = require('../models/repairs.model');
+const User = require('../models/user.model');
+const catchAsync = require('../utils/catchAsync');
 
-exports.findAllRepairs = async (req, res) => {
-  try {
-    const repairs = await Repair.findAll({
-      attributes: ['id', 'date', 'userId'],
-      where: {
-        status: 'pending',
-      },
-    });
+exports.findAllRepairs = catchAsync(async (req, res, next) => {
+  const repairs = await Repair.findAll({
+    attributes: ['id', 'date', 'userId'],
+    where: {
+      status: 'pending',
+    },
+  });
 
-    return res.status(200).json({
-      status: 'success',
-      repairs,
-    });
-  } catch {
-    return res.status(500).json({
-      status: 'fail',
-      message: 'Somethin went very wront! 🧨',
-    });
-  }
-};
+  return res.status(200).json({
+    status: 'success',
+    repairs,
+  });
+});
+
 exports.findOneRepair = async (req, res) => {
   try {
     const { id } = req.params;
@@ -29,6 +25,12 @@ exports.findOneRepair = async (req, res) => {
         status: 'pending',
         id,
       },
+      include: [
+        {
+          model: User,
+          attributes: { exclude: ['status','password', 'createdAt', 'updatedAt'] },
+        },
+      ],
     });
 
     if (!repair) {
@@ -62,7 +64,7 @@ exports.createRepair = async (req, res) => {
     });
   } catch {
     return res.status(500).json({
-      status: 'fail!  ',
+      status: 'fail',
       message: 'Somethin went very wront! 🧨',
     });
   }
@@ -86,10 +88,10 @@ exports.updateRepair = async (req, res) => {
       });
     }
 
-    await repair.update({ status:'completed' });
+    await repair.update({ status });
 
     return res.status(200).json({
-      status: 'completed',
+      status: 'success',
     });
   } catch {
     return res.status(500).json({
@@ -112,7 +114,7 @@ exports.deleteRepair = async (req, res) => {
     if (!repair) {
       return res.status(404).json({
         status: 'error',
-        message: 'Repair is completed',
+        message: 'Repair not found',
       });
     }
 
