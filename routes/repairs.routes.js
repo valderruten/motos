@@ -7,18 +7,19 @@ const {
   updateRepair,
   deleteRepair,
 } = require('../controllers/repair.controller');
+const { validIfExistRepair } = require('../middlewares/repair.middleware');
 
 const router = Router();
 
 router.get('/', findAllRepairs);
 
-router.get('/:id', findOneRepair);
+router.get('/:id', validIfExistRepair, findOneRepair);
 
 router.post('/', createRepair);
 
-router.patch('/:id', updateRepair);
+router.patch('/:id', validIfExistRepair, updateRepair);
 
-router.delete('/:id', deleteRepair);
+router.delete('/:id', validIfExistRepair, deleteRepair);
 
 module.exports = {
   repairRouter: router,
