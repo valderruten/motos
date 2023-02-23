@@ -7,8 +7,9 @@ exports.validIfExistUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
 
   const user = await User.findOne({
+    attributes:['id','name','email'],
     where: {
-      status: true,
+      status: 'available',
       id,
     },
   });
