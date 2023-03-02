@@ -21,7 +21,13 @@ router.get('/:id', validIfExistUser, findOneUser);
 
 router.use(protect);
 
-router.post('/', createUser);
+router.post('/', [
+  check('name','the name is mandatory').not().isEmpty,
+  check('email', 'The email must be mandatory').not().isEmpty(),
+  check('email', 'The email must be a correct format').isEmail(),
+  check('password', 'The password must be mandatory').not().isEmpty(),
+]
+,createUser);
 
 router.patch('/:id', validIfExistUser, updateUser);
 

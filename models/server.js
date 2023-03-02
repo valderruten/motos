@@ -12,6 +12,7 @@ const { repairRouter } = require('../routes/repairs.routes');
 const { db } = require('../database/db');
 const AppError = require('../utils/appError');
 const globalErrorHandler = require('../controllers/error.controller');
+const initModel = require('./init.model');
 
 class Server {
   constructor() {
@@ -27,7 +28,6 @@ class Server {
       auth: '/api/v1/auth',
       repairs: '/api/v1/repairs',
       users: '/api/v1/users',
-   
     };
 
     //Connect to db
@@ -76,7 +76,7 @@ class Server {
       .catch(err => console.log(err));
 
     //relations
-
+    initModel();
     db.sync()
       .then(() => console.log('Database synced 😁'))
       .catch(err => console.log(err));

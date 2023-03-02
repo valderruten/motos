@@ -21,6 +21,15 @@ const Repair = db.define('repairs', {
     allowNull: false,
     defaultValue: 'pending',
   },
+  motorsNumber:{
+    type:DataTypes.STRING,
+    allowNull:false,
+
+  },
+  description:{
+    type:DataTypes.STRING,
+    allowNull:true,
+  },
 });
 
 module.exports = Repair;
